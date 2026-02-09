@@ -1,26 +1,25 @@
 import { Routes } from '@angular/router';
-
-import { Routes } from '@angular/router';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'jobs',
-    pathMatch: 'full'
+  { path: '', redirectTo: 'jobs', pathMatch: 'full' },
+  { 
+    path: 'jobs', 
+    loadComponent: () => import('./features/jobs/job-search/job-search.component').then(m => m.JobSearchComponent) 
   },
-  {
-    path: 'jobs',
-    loadChildren: () =>
-      import('./jobs/jobs.routes').then(m => m.JOBS_ROUTES)
+  { 
+    path: 'favorites', 
+    loadComponent: () => import('./features/favorites/favorites-list/favorites-list.component').then(m => m.FavoritesListComponent),
+    canActivate: [AuthGuard]
   },
-  {
-    path: 'login',
-    loadComponent: () =>
-      import('./auth/login/login.component').then(c => c.LoginComponent)
+  { 
+    path: 'applications', 
+    loadComponent: () => import('./features/applications/application-list/application-list.component').then(m => m.ApplicationListComponent),
+    canActivate: [AuthGuard]
   },
-  {
-    path: 'register',
-    loadComponent: () =>
-      import('./auth/register/register.component').then(c => c.RegisterComponent)
+  { 
+    path: 'profile', 
+    loadComponent: () => import('./features/profile/profile-edit/profile-edit.component').then(m => m.ProfileEditComponent),
+    canActivate: [AuthGuard]
   }
 ];
