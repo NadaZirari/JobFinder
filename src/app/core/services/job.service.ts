@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { Job } from '../models/job.model';
 
@@ -22,100 +22,34 @@ export interface JobSearchResponse {
   providedIn: 'root'
 })
 export class JobService {
-
-private readonly ADZUNA_BASE_URL = 'https://api.adzuna.com/v1/api';
+  private readonly ADZUNA_BASE_URL = 'https://api.adzuna.com/v1/api';
+  private readonly ADZUNA_APP_ID = '2fc7ffd3'; 
+  private readonly ADZUNA_APP_KEY = '0200e6071135284953a0d47fa2ad3a22'; 
+  private readonly ADZUNA_COUNTRY = 'fr'; 
 
   constructor(private http: HttpClient) {}
 
   searchJobs(params: JobSearchParams): Observable<JobSearchResponse> {
     const { keywords, location, page = 1, pageSize = 10 } = params;
-    
-    // Pour le développement, nous allons simuler des données
-    // En production, remplacez par l'appel API réel
-    if (this.isDevelopment()) {
-      return this.getMockJobs(params);
-    }
 
-    const url = `${this.ADZUNA_BASE_URL}/${location}/search/1`;
+    // Appel API Adzuna avec la bonne URL
+    const url = `${this.ADZUNA_BASE_URL}/jobs/${this.ADZUNA_COUNTRY}/search/${page}`;
     const queryParams = {
-  
+      app_id: this.ADZUNA_APP_ID,
+      app_key: this.ADZUNA_APP_KEY,
       what: keywords,
-      where: location,
-      page: page.toString(),
-      results_per_page: pageSize.toString()
+      where: location || 'France',
+      results_per_page: pageSize.toString(),
+      content_type: 'application/json'
     };
 
     return this.http.get<any>(url, { params: queryParams }).pipe(
       map(response => this.transformAdzunaResponse(response)),
       catchError(error => {
-        console.error('Error fetching jobs:', error);
-        return this.getMockJobs(params);
+        console.error('Error fetching jobs from Adzuna API:', error);
+        throw error; // Propager l'erreur comme exigé
       })
     );
-  }
-
-  private isDevelopment(): boolean {
-    return true; // Pour le développement, retourner true
-  }
-
-  private getMockJobs(params: JobSearchParams): Observable<JobSearchResponse> {
-    const mockJobs: Job[] = [
-      {
-        id: '1',
-        title: 'Développeur Angular Senior',
-        company: 'TechCorp',
-        location: 'Paris, France',
-        description: 'Nous recherchons un développeur Angular expérimenté pour rejoindre notre équipe...',
-        url: 'https://example.com/job/1',
-        salary: '45k-65k€',
-        postedAt: new Date('2024-01-15')
-      },
-      {
-        id: '2',
-        title: 'Développeur Full Stack',
-        company: 'StartupXYZ',
-        location: 'Lyon, France',
-        description: 'Rejoignez une startup innovante en tant que développeur full stack...',
-        url: 'https://example.com/job/2',
-        salary: '40k-55k€',
-        postedAt: new Date('2024-01-14')
-      },
-      {
-        id: '3',
-        title: 'Ingénieur Logiciel',
-        company: 'BigTech',
-        location: 'Marseille, France',
-        description: 'Poste d\'ingénieur logiciel avec des opportunités d\'évolution...',
-        url: 'https://example.com/job/3',
-        salary: '50k-70k€',
-        postedAt: new Date('2024-01-13')
-      }
-    ];
-
-    // Filtrer par mots-clés et localisation
-    const filteredJobs = mockJobs.filter(job => {
-      const matchesKeywords = !params.keywords || 
-        job.title.toLowerCase().includes(params.keywords.toLowerCase());
-      
-      const matchesLocation = !params.location || 
-        job.location.toLowerCase().includes(params.location.toLowerCase());
-
-      return matchesKeywords && matchesLocation;
-    });
-
-    // Trier par date (plus récent en premier)
-    filteredJobs.sort((a, b) => new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime());
-
-    const startIndex = (params.page || 1) - 1;
-    const endIndex = startIndex + (params.pageSize || 10);
-    const paginatedJobs = filteredJobs.slice(startIndex, endIndex);
-
-    return of({
-      results: paginatedJobs,
-      count: filteredJobs.length,
-      currentPage: params.page || 1,
-      totalPages: Math.ceil(filteredJobs.length / (params.pageSize || 10))
-    });
   }
 
   private transformAdzunaResponse(response: any): JobSearchResponse {
@@ -126,15 +60,16 @@ private readonly ADZUNA_BASE_URL = 'https://api.adzuna.com/v1/api';
       location: job.location.display_name,
       description: job.description,
       url: job.redirect_url,
-      salary: job.salary ? `${job.salary.min}-${job.salary.max}` : undefined,
-      postedAt: new Date(job.created)
+      salary: job.salary ? `${job.salary.min}-${job.salary.max}` : 'Non spécifié',
+      postedAt: new Date(job.created),
+      apiSource: 'adzuna'
     }));
 
     return {
       results: jobs,
-      count: response.count,
+      count: response.count || jobs.length,
       currentPage: response.page || 1,
-      totalPages: Math.ceil(response.count / (response.results?.length || 10))
+      totalPages: Math.ceil((response.count || jobs.length) / jobs.length)
     };
   }
 }

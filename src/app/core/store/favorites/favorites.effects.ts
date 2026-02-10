@@ -11,10 +11,13 @@ export class FavoritesEffects {
   constructor(
     private actions$: Actions,
     private favoriteService: FavoriteService
-  ) {}
+  ) {
+    console.log('FavoritesEffects initialized');
+    console.log('favoriteService:', this.favoriteService);
+  }
 
-  loadFavorites$ = createEffect(() =>
-    this.actions$.pipe(
+  loadFavorites$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(FavoritesActions.loadFavorites),
       mergeMap(() =>
         this.favoriteService.getFavorites().pipe(
@@ -22,8 +25,8 @@ export class FavoritesEffects {
           catchError(error => of(FavoritesActions.loadFavoritesFailure({ error: error.message })))
         )
       )
-    )
-  );
+    );
+  });
 
   addFavorite$ = createEffect(() =>
     this.actions$.pipe(
