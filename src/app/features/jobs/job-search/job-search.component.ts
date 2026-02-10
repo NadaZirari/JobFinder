@@ -2,22 +2,20 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, Subject, combineLatest } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, startWith, takeUntil, map } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
+import { Observable, Subject, takeUntil, map, startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { JobService, JobSearchParams, JobSearchResponse } from '../../../core/services/job.service';
 import { Job } from '../../../core/models/job.model';
+import { Store } from '@ngrx/store';
 import { AuthService } from '../../../core/services/auth.service';
 import * as FavoritesActions from '../../../core/store/favorites/favorites.actions';
 import * as ApplicationsActions from '../../../core/store/applications/applications.actions';
-import { JobListComponent } from '../job-list/job-list.component';
 import { selectIsFavorite, selectFavoritesLoading } from '../../../core/store/favorites/favorites.selectors';
 import { selectIsApplicationTracked, selectApplicationsLoading } from '../../../core/store/applications/applications.selectors';
 
 @Component({
   selector: 'app-job-search',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, JobListComponent],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './job-search.component.html',
   styleUrls: ['./job-search.component.css']
 })
@@ -66,14 +64,14 @@ export class JobSearchComponent implements OnInit, OnDestroy {
     this.jobs$.pipe(
       startWith({ results: [], count: 0, currentPage: 1, totalPages: 0 }),
       takeUntil(this.destroy$)
-    ).subscribe(response => {
+    ).subscribe((response: JobSearchResponse) => {
       this.totalJobs = response.count;
       this.totalPages = response.totalPages;
       this.currentPage = response.currentPage;
       this.isLoading = false;
       
       // Vérifier le statut de favoris pour chaque offre
-      response.results.forEach(job => {
+      response.results.forEach((job: Job) => {
         this.store.dispatch(FavoritesActions.checkFavoriteStatus({ offerId: job.id.toString() }));
         this.store.dispatch(ApplicationsActions.checkApplicationStatus({ offerId: job.id.toString() }));
       });
