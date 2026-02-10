@@ -10,13 +10,14 @@ import { Job } from '../../../core/models/job.model';
 import { AuthService } from '../../../core/services/auth.service';
 import * as FavoritesActions from '../../../core/store/favorites/favorites.actions';
 import * as ApplicationsActions from '../../../core/store/applications/applications.actions';
+import { JobListComponent } from '../job-list/job-list.component';
 import { selectIsFavorite, selectFavoritesLoading } from '../../../core/store/favorites/favorites.selectors';
 import { selectIsApplicationTracked, selectApplicationsLoading } from '../../../core/store/applications/applications.selectors';
 
 @Component({
   selector: 'app-job-search',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, JobListComponent],
   templateUrl: './job-search.component.html',
   styleUrls: ['./job-search.component.css']
 })

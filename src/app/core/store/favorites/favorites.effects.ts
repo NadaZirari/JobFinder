@@ -28,8 +28,8 @@ export class FavoritesEffects {
     );
   });
 
-  addFavorite$ = createEffect(() =>
-    this.actions$.pipe(
+  addFavorite$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(FavoritesActions.addFavorite),
       mergeMap(({ job }) =>
         this.favoriteService.addToFavorites(job).pipe(
@@ -37,11 +37,11 @@ export class FavoritesEffects {
           catchError(error => of(FavoritesActions.addFavoriteFailure({ error: error.message })))
         )
       )
-    )
-  );
+    );
+  });
 
-  removeFavorite$ = createEffect(() =>
-    this.actions$.pipe(
+  removeFavorite$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(FavoritesActions.removeFavorite),
       mergeMap(({ offerId }) =>
         this.favoriteService.removeFromFavorites(offerId).pipe(
@@ -49,11 +49,11 @@ export class FavoritesEffects {
           catchError(error => of(FavoritesActions.removeFavoriteFailure({ error: error.message })))
         )
       )
-    )
-  );
+    );
+  });
 
-  checkFavoriteStatus$ = createEffect(() =>
-    this.actions$.pipe(
+  checkFavoriteStatus$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(FavoritesActions.checkFavoriteStatus),
       mergeMap(({ offerId }) =>
         this.favoriteService.isFavorite(offerId).pipe(
@@ -61,6 +61,6 @@ export class FavoritesEffects {
           catchError(error => of(FavoritesActions.checkFavoriteStatusFailure({ error: error.message })))
         )
       )
-    )
-  );
+    );
+  });
 }

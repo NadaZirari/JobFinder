@@ -13,8 +13,8 @@ export class ApplicationsEffects {
     private applicationService: ApplicationService
   ) {}
 
-  loadApplications$ = createEffect(() =>
-    this.actions$.pipe(
+  loadApplications$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(ApplicationsActions.loadApplications),
       mergeMap(() =>
         this.applicationService.getApplications().pipe(
@@ -22,11 +22,11 @@ export class ApplicationsEffects {
           catchError(error => of(ApplicationsActions.loadApplicationsFailure({ error: error.message })))
         )
       )
-    )
-  );
+    );
+  });
 
-  addApplication$ = createEffect(() =>
-    this.actions$.pipe(
+  addApplication$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(ApplicationsActions.addApplication),
       mergeMap(({ job }) =>
         this.applicationService.addApplication(job).pipe(
@@ -34,11 +34,11 @@ export class ApplicationsEffects {
           catchError(error => of(ApplicationsActions.addApplicationFailure({ error: error.message })))
         )
       )
-    )
-  );
+    );
+  });
 
-  updateApplicationStatus$ = createEffect(() =>
-    this.actions$.pipe(
+  updateApplicationStatus$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(ApplicationsActions.updateApplicationStatus),
       mergeMap(({ applicationId, status }) =>
         this.applicationService.updateApplicationStatus(applicationId, status).pipe(
@@ -46,11 +46,11 @@ export class ApplicationsEffects {
           catchError(error => of(ApplicationsActions.updateApplicationStatusFailure({ error: error.message })))
         )
       )
-    )
-  );
+    );
+  });
 
-  updateApplicationNotes$ = createEffect(() =>
-    this.actions$.pipe(
+  updateApplicationNotes$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(ApplicationsActions.updateApplicationNotes),
       mergeMap(({ applicationId, notes }) =>
         this.applicationService.updateApplicationNotes(applicationId, notes).pipe(
@@ -58,11 +58,11 @@ export class ApplicationsEffects {
           catchError(error => of(ApplicationsActions.updateApplicationNotesFailure({ error: error.message })))
         )
       )
-    )
-  );
+    );
+  });
 
-  removeApplication$ = createEffect(() =>
-    this.actions$.pipe(
+  removeApplication$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(ApplicationsActions.removeApplication),
       mergeMap(({ applicationId }) =>
         this.applicationService.removeApplication(applicationId).pipe(
@@ -70,11 +70,11 @@ export class ApplicationsEffects {
           catchError(error => of(ApplicationsActions.removeApplicationFailure({ error: error.message })))
         )
       )
-    )
-  );
+    );
+  });
 
-  checkApplicationStatus$ = createEffect(() =>
-    this.actions$.pipe(
+  checkApplicationStatus$ = createEffect(() => {
+    return this.actions$.pipe(
       ofType(ApplicationsActions.checkApplicationStatus),
       mergeMap(({ offerId }) =>
         this.applicationService.isApplicationTracked(offerId).pipe(
@@ -82,6 +82,6 @@ export class ApplicationsEffects {
           catchError(error => of(ApplicationsActions.checkApplicationStatusFailure({ error: error.message })))
         )
       )
-    )
-  );
+    );
+  });
 }

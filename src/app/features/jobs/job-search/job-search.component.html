@@ -1,175 +1,146 @@
-<div class="min-h-screen bg-gray-50">
-  <!-- Header avec formulaire de recherche -->
-  <div class="bg-white shadow">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-900">JobFinder</h1>
-        <div class="flex items-center space-x-4">
-          <!-- Debug: état de connexion -->
-          <span class="text-xs text-gray-500" *ngIf="isLoggedIn$ | async as isLoggedIn">
-            Connecté: {{ isLoggedIn }}
-          </span>
-          
-          <ng-container *ngIf="isLoggedIn$ | async as isLoggedIn; else loginLinks">
-            <a routerLink="/favorites" class="text-indigo-600 hover:text-indigo-800 underline cursor-pointer">Mes Favoris</a>
-            <a routerLink="/applications" class="text-indigo-600 hover:text-indigo-800 underline cursor-pointer">Mes Candidatures</a>
-            <a routerLink="/profile" class="text-indigo-600 hover:text-indigo-800 underline cursor-pointer">Mon Profil</a>
-            <button (click)="logout()" class="text-red-600 hover:text-red-800 underline cursor-pointer">Déconnexion</button>
-          </ng-container>
-          <ng-template #loginLinks>
-            <a routerLink="/auth/login" class="text-indigo-600 hover:text-indigo-800">Connexion</a>
-            <a routerLink="/auth/register" class="text-indigo-600 hover:text-indigo-800">Inscription</a>
-          </ng-template>
-        </div>
-      </div>
-      
-      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="flex flex-col sm:flex-row gap-4">
-        <div class="flex-1">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  <!-- Hero Section & Search Form -->
+  <div class="mb-12 text-center">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+      Trouvez votre <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-violet-600">job idéal</span>
+    </h1>
+    <p class="text-lg text-slate-600 max-w-2xl mx-auto mb-8">
+      Explorez des milliers d'offres d'emploi provenant des meilleures sources et gérez vos candidatures en un seul endroit.
+    </p>
+
+    <div class="glass-card p-2 max-w-4xl mx-auto">
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="flex flex-col md:flex-row items-stretch gap-2">
+        <div class="flex-1 relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
           <input
             type="text"
             formControlName="keywords"
-            placeholder="Mots clés (ex: Développeur Angular)"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            [ngClass]="{'border-red-500': keywords?.invalid && keywords?.touched}"
+            placeholder="Poste, mots-clés ou entreprise"
+            class="block w-full pl-10 pr-3 py-4 border-transparent bg-transparent focus:ring-0 text-slate-900 placeholder-slate-400 font-medium"
           >
-          <div *ngIf="keywords?.invalid && keywords?.touched" class="text-red-500 text-sm mt-1">
-            Les mots clés sont requis
-          </div>
         </div>
         
-        <div class="flex-1">
+        <div class="hidden md:block w-px bg-slate-200 my-2"></div>
+
+        <div class="flex-1 relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
           <input
             type="text"
             formControlName="location"
-            placeholder="Localisation (ex: Paris, France)"
-            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-            [ngClass]="{'border-red-500': location?.invalid && location?.touched}"
+            placeholder="Ville ou région"
+            class="block w-full pl-10 pr-3 py-4 border-transparent bg-transparent focus:ring-0 text-slate-900 placeholder-slate-400 font-medium"
           >
-          <div *ngIf="location?.invalid && location?.touched" class="text-red-500 text-sm mt-1">
-            La localisation est requise
-          </div>
         </div>
         
         <button
           type="submit"
           [disabled]="searchForm.invalid || isLoading"
-          class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          class="btn-primary md:w-auto px-8 flex items-center justify-center gap-2"
         >
           <span *ngIf="!isLoading">Rechercher</span>
-          <span *ngIf="isLoading">Recherche...</span>
+          <div *ngIf="isLoading" class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
         </button>
       </form>
     </div>
+    
+    <div class="mt-4 flex flex-wrap justify-center gap-2 text-xs text-slate-500 font-medium" *ngIf="keywords?.invalid && keywords?.touched || location?.invalid && location?.touched">
+       <span *ngIf="keywords?.invalid && keywords?.touched" class="text-red-500">Mots-clés requis •</span>
+       <span *ngIf="location?.invalid && location?.touched" class="text-red-500">Localisation requise</span>
+    </div>
   </div>
 
-  <!-- Résultats de recherche -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div *ngIf="isLoading" class="text-center py-8">
-      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-      <p class="mt-2 text-gray-600">Recherche en cours...</p>
+  <!-- Results Section -->
+  <div class="space-y-8">
+    <div *ngIf="isLoading && totalJobs === 0" class="flex flex-col items-center justify-center py-20">
+      <div class="w-16 h-16 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin mb-4"></div>
+      <p class="text-slate-500 font-medium">Nous recherchons les meilleures opportunités...</p>
     </div>
 
-    <div *ngIf="!isLoading">
+    <ng-container *ngIf="!isLoading || totalJobs > 0">
       <div *ngIf="jobs$ | async as searchResponse">
         <div *ngIf="searchResponse.results.length > 0">
-          <div class="mb-4 text-sm text-gray-600">
-            {{ searchResponse.count }} offre(s) trouvée(s) - Page {{ searchResponse.currentPage }} sur {{ searchResponse.totalPages }}
-          </div>
-          
-          <div class="space-y-4">
-            <div
-              *ngFor="let job of searchResponse.results; trackBy: trackByJobId"
-              class="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow"
-            >
-              <div class="flex justify-between items-start">
-                <div class="flex-1">
-                  <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ job.title }}</h3>
-                  <div class="flex items-center text-sm text-gray-600 mb-2">
-                    <span class="font-medium">{{ job.company }}</span>
-                    <span class="mx-2">•</span>
-                    <span>{{ job.location }}</span>
-                    <span *ngIf="job.salary" class="mx-2">•</span>
-                    <span *ngIf="job.salary" class="text-green-600 font-medium">{{ job.salary }}</span>
-                  </div>
-                  <p class="text-gray-700 mb-4 line-clamp-3">{{ job.description }}</p>
-                  <div class="text-sm text-gray-500">
-                    Postée le {{ job.postedAt | date:'dd/MM/yyyy' }}
-                  </div>
-                </div>
-                
-                <div class="ml-4 flex flex-col space-y-2">
-                  <button
-                    (click)="viewJob(job)"
-                    class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm"
-                  >
-                    Voir l'offre
-                  </button>
-                  
-                  <ng-container *ngIf="isFavorite$(job.id) | async as isFav">
-                    <button
-                      *ngIf="isLoggedIn$ | async"
-                      (click)="isFav ? removeFromFavorites(job.id) : addToFavorites(job)"
-                      [disabled]="favoritesLoading$() | async"
-                      class="px-4 py-2 text-white rounded text-sm disabled:opacity-50"
-                      [ngClass]="{
-                        'bg-yellow-500 hover:bg-yellow-600': !isFav,
-                        'bg-red-500 hover:bg-red-600': isFav
-                      }"
-                    >
-                      <span *ngIf="!isFav">⭐ Favoris</span>
-                      <span *ngIf="isFav">❌ Retirer</span>
-                    </button>
-                  </ng-container>
-                  
-                  <ng-container *ngIf="isApplicationTracked$(job.id) | async as isTracked">
-                    <button
-                      *ngIf="isLoggedIn$ | async"
-                      (click)="isTracked ? removeFromApplications(job.id) : addToApplications(job)"
-                      [disabled]="applicationsLoading$() | async"
-                      class="px-4 py-2 text-white rounded text-sm disabled:opacity-50 mt-2"
-                      [ngClass]="{
-                        'bg-green-500 hover:bg-green-600': !isTracked,
-                        'bg-orange-500 hover:bg-orange-600': isTracked
-                      }"
-                    >
-                      <span *ngIf="!isTracked">📋 Suivre candidature</span>
-                      <span *ngIf="isTracked">❌ Arrêter suivi</span>
-                    </button>
-                  </ng-container>
-                </div>
-              </div>
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-bold text-slate-800">
+              {{ searchResponse.count }} offres trouvées
+            </h2>
+            <div class="flex items-center gap-2 text-sm text-slate-500 font-medium">
+              <span>Page {{ searchResponse.currentPage }} / {{ searchResponse.totalPages }}</span>
             </div>
           </div>
+          
+          <app-job-list
+            [jobs]="searchResponse.results"
+            (onView)="viewJob($event)"
+            (onAddFavorite)="addToFavorites($event)"
+            (onRemoveFavorite)="removeFromFavorites($event)"
+            (onApply)="addToApplications($event)"
+            (onRemoveApplication)="removeFromApplications($event)"
+          ></app-job-list>
 
           <!-- Pagination -->
-          <div *ngIf="totalPages > 1" class="flex justify-center items-center space-x-2 mt-8">
+          <div *ngIf="searchResponse.totalPages > 1" class="flex justify-center items-center gap-2 mt-12">
             <button
               (click)="onPageChange(currentPage - 1)"
               [disabled]="currentPage <= 1"
-              class="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              class="p-2 border border-slate-200 rounded-lg hover:bg-white hover:shadow-md transition-all disabled:opacity-30 disabled:cursor-not-allowed group"
             >
-              Précédent
+              <svg class="w-5 h-5 text-slate-600 group-hover:text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
             </button>
             
-            <span class="px-3 py-1">
-              Page {{ currentPage }} sur {{ totalPages }}
-            </span>
+            <div class="flex items-center gap-1">
+               <button 
+                  *ngFor="let p of [1, 2, 3]" 
+                  (click)="onPageChange(p)"
+                  class="w-10 h-10 rounded-lg text-sm font-bold transition-all"
+                  [ngClass]="currentPage === p ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-200' : 'text-slate-600 hover:bg-white hover:shadow-sm'"
+               >
+                 {{ p }}
+               </button>
+               <span class="px-2 font-bold text-slate-300" *ngIf="searchResponse.totalPages > 3">...</span>
+               <button 
+                  *ngIf="searchResponse.totalPages > 3"
+                  (click)="onPageChange(searchResponse.totalPages)"
+                  class="w-10 h-10 rounded-lg text-sm font-bold transition-all text-slate-600 hover:bg-white hover:shadow-sm"
+               >
+                 {{ searchResponse.totalPages }}
+               </button>
+            </div>
             
             <button
               (click)="onPageChange(currentPage + 1)"
-              [disabled]="currentPage >= totalPages"
-              class="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              [disabled]="currentPage >= searchResponse.totalPages"
+              class="p-2 border border-slate-200 rounded-lg hover:bg-white hover:shadow-md transition-all disabled:opacity-30 disabled:cursor-not-allowed group"
             >
-              Suivant
+              <svg class="w-5 h-5 text-slate-600 group-hover:text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
         </div>
         
-        <div *ngIf="searchResponse.results.length === 0" class="text-center py-8">
-          <div class="text-gray-500 text-lg">Aucune offre trouvée</div>
-          <p class="text-gray-400 mt-2">Essayez de modifier vos critères de recherche</p>
+        <div *ngIf="searchResponse.results.length === 0 && !isLoading" class="flex flex-col items-center justify-center py-20 text-center">
+          <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+            <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-slate-800 mb-2">Aucune offre trouvée</h3>
+          <p class="text-slate-500 max-w-sm">
+            Désolé, nous n'avons rien trouvé pour ces critères. Essayez d'utiliser des termes plus généraux ou une autre localisation.
+          </p>
         </div>
       </div>
-    </div>
+    </ng-container>
   </div>
 </div>
