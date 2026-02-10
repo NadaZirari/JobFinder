@@ -1,0 +1,146 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Header avec formulaire de recherche -->
+  <div class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-900">JobFinder</h1>
+        <div class="flex items-center space-x-4">
+          <ng-container *ngIf="isLoggedIn$ | async as isLoggedIn">
+            <a routerLink="/favorites" class="text-indigo-600 hover:text-indigo-800">Mes Favoris</a>
+            <a routerLink="/applications" class="text-indigo-600 hover:text-indigo-800">Mes Candidatures</a>
+            <a routerLink="/profile" class="text-indigo-600 hover:text-indigo-800">Mon Profil</a>
+            <button (click)="logout()" class="text-red-600 hover:text-red-800">Déconnexion</button>
+          </ng-container>
+          <ng-container *ngIf="!isLoggedIn">
+            <a routerLink="/auth/login" class="text-indigo-600 hover:text-indigo-800">Connexion</a>
+            <a routerLink="/auth/register" class="text-indigo-600 hover:text-indigo-800">Inscription</a>
+          </ng-container>
+        </div>
+      </div>
+      
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+          <input
+            type="text"
+            formControlName="keywords"
+            placeholder="Mots clés (ex: Développeur Angular)"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            [ngClass]="{'border-red-500': keywords?.invalid && keywords?.touched}"
+          >
+          <div *ngIf="keywords?.invalid && keywords?.touched" class="text-red-500 text-sm mt-1">
+            Les mots clés sont requis
+          </div>
+        </div>
+        
+        <div class="flex-1">
+          <input
+            type="text"
+            formControlName="location"
+            placeholder="Localisation (ex: Paris, France)"
+            class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            [ngClass]="{'border-red-500': location?.invalid && location?.touched}"
+          >
+          <div *ngIf="location?.invalid && location?.touched" class="text-red-500 text-sm mt-1">
+            La localisation est requise
+          </div>
+        </div>
+        
+        <button
+          type="submit"
+          [disabled]="searchForm.invalid || isLoading"
+          class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <span *ngIf="!isLoading">Rechercher</span>
+          <span *ngIf="isLoading">Recherche...</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Résultats de recherche -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div *ngIf="isLoading" class="text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <p class="mt-2 text-gray-600">Recherche en cours...</p>
+    </div>
+
+    <div *ngIf="!isLoading">
+      <div *ngIf="jobs$ | async as searchResponse">
+        <div *ngIf="searchResponse.results.length > 0">
+          <div class="mb-4 text-sm text-gray-600">
+            {{ searchResponse.count }} offre(s) trouvée(s) - Page {{ searchResponse.currentPage }} sur {{ searchResponse.totalPages }}
+          </div>
+          
+          <div class="space-y-4">
+            <div
+              *ngFor="let job of searchResponse.results; trackBy: trackByJobId"
+              class="bg-white p-6 rounded-lg shadow hover:shadow-md transition-shadow"
+            >
+              <div class="flex justify-between items-start">
+                <div class="flex-1">
+                  <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ job.title }}</h3>
+                  <div class="flex items-center text-sm text-gray-600 mb-2">
+                    <span class="font-medium">{{ job.company }}</span>
+                    <span class="mx-2">•</span>
+                    <span>{{ job.location }}</span>
+                    <span *ngIf="job.salary" class="mx-2">•</span>
+                    <span *ngIf="job.salary" class="text-green-600 font-medium">{{ job.salary }}</span>
+                  </div>
+                  <p class="text-gray-700 mb-4 line-clamp-3">{{ job.description }}</p>
+                  <div class="text-sm text-gray-500">
+                    Postée le {{ job.postedAt | date:'dd/MM/yyyy' }}
+                  </div>
+                </div>
+                
+                <div class="ml-4 flex flex-col space-y-2">
+                  <button
+                    (click)="viewJob(job)"
+                    class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm"
+                  >
+                    Voir l'offre
+                  </button>
+                  
+                  <button
+                    *ngIf="isLoggedIn$ | async"
+                    (click)="addToFavorites(job)"
+                    class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm"
+                  >
+                    ⭐ Favoris
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pagination -->
+          <div *ngIf="totalPages > 1" class="flex justify-center items-center space-x-2 mt-8">
+            <button
+              (click)="onPageChange(currentPage - 1)"
+              [disabled]="currentPage <= 1"
+              class="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Précédent
+            </button>
+            
+            <span class="px-3 py-1">
+              Page {{ currentPage }} sur {{ totalPages }}
+            </span>
+            
+            <button
+              (click)="onPageChange(currentPage + 1)"
+              [disabled]="currentPage >= totalPages"
+              class="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Suivant
+            </button>
+          </div>
+        </div>
+        
+        <div *ngIf="searchResponse.results.length === 0" class="text-center py-8">
+          <div class="text-gray-500 text-lg">Aucune offre trouvée</div>
+          <p class="text-gray-400 mt-2">Essayez de modifier vos critères de recherche</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
