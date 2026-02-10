@@ -2,14 +2,146 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <h1 class="text-3xl font-bold text-gray-900 mb-8">Mes Candidatures</h1>
     
-    <div class="bg-white rounded-lg shadow p-6">
-      <p class="text-gray-600">Vos candidatures apparaîtront ici.</p>
-      <p class="text-gray-500 text-sm mt-2">Cette fonctionnalité sera bientôt disponible.</p>
-      
-      <div class="mt-6">
-        <a routerLink="/jobs" class="text-indigo-600 hover:text-indigo-800">
-          ← Retour à la recherche d'emplois
-        </a>
+    <!-- Loading -->
+    <div *ngIf="loading$ | async" class="text-center py-8">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <p class="mt-2 text-gray-600">Chargement de vos candidatures...</p>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error$ | async" class="bg-red-50 border border-red-200 rounded-md p-4 mb-6">
+      <div class="text-red-700">{{ error$ | async }}</div>
+    </div>
+
+    <!-- Statistics -->
+    <div *ngIf="!(loading$ | async) && !(error$ | async)" class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-2xl font-bold text-gray-900">{{ totalCount$ | async }}</div>
+        <div class="text-sm text-gray-600">Total</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-2xl font-bold text-yellow-600">{{ pendingCount$ | async }}</div>
+        <div class="text-sm text-gray-600">En attente</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-2xl font-bold text-green-600">{{ acceptedCount$ | async }}</div>
+        <div class="text-sm text-gray-600">Acceptées</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="text-2xl font-bold text-red-600">{{ rejectedCount$ | async }}</div>
+        <div class="text-sm text-gray-600">Refusées</div>
+      </div>
+    </div>
+
+    <!-- Applications List -->
+    <div *ngIf="!(loading$ | async) && !(error$ | async)">
+      <div *ngIf="applications$ | async as applications">
+        <div *ngIf="applications.length > 0" class="space-y-4">
+          <div *ngFor="let app of applications" class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+            <div class="flex justify-between items-start">
+              <div class="flex-1">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ app.title }}</h3>
+                <div class="space-y-1 text-sm text-gray-600 mb-3">
+                  <p><strong>Entreprise:</strong> {{ app.company }}</p>
+                  <p><strong>Localisation:</strong> {{ app.location }}</p>
+                  <p><strong>Date:</strong> {{ formatDate(app.dateAdded) }}</p>
+                </div>
+                
+                <!-- Status -->
+                <div class="mb-3">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Statut:</label>
+                  <select 
+                    [value]="app.status" 
+                    (change)="updateApplicationStatus(app.id.toString(), $any($event.target).value)"
+                    class="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    [ngClass]="{
+                      'bg-yellow-100 border-yellow-300': app.status === 'en_attente',
+                      'bg-green-100 border-green-300': app.status === 'accepte',
+                      'bg-red-100 border-red-300': app.status === 'refuse'
+                    }"
+                  >
+                    <option *ngFor="let option of getStatusOptions()" [value]="option.value">
+                      {{ option.label }}
+                    </option>
+                  </select>
+                </div>
+                
+                <!-- Notes -->
+                <div class="mb-3">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Notes:</label>
+                  <div *ngIf="editingApplicationId !== app.id.toString()">
+                    <p class="text-sm text-gray-600 bg-gray-50 p-2 rounded min-h-[60px]">
+                      {{ app.notes || 'Aucune note' }}
+                    </p>
+                    <button 
+                      (click)="startEditingNotes(app)"
+                      class="mt-2 text-sm text-indigo-600 hover:text-indigo-800"
+                    >
+                      Modifier les notes
+                    </button>
+                  </div>
+                  
+                  <div *ngIf="editingApplicationId === app.id.toString()">
+                    <form [formGroup]="notesForm" (ngSubmit)="saveNotes(app.id.toString())">
+                      <textarea 
+                        formControlName="notes"
+                        rows="3"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                        placeholder="Ajoutez vos notes ici..."
+                      ></textarea>
+                      <div class="mt-2 flex space-x-2">
+                        <button 
+                          type="submit"
+                          class="px-3 py-1 bg-indigo-600 text-white text-sm rounded hover:bg-indigo-700"
+                        >
+                          Enregistrer
+                        </button>
+                        <button 
+                          type="button"
+                          (click)="cancelEditingNotes()"
+                          class="px-3 py-1 bg-gray-300 text-gray-700 text-sm rounded hover:bg-gray-400"
+                        >
+                          Annuler
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="ml-4 flex flex-col space-y-2">
+                <button
+                  (click)="viewJob(app.url)"
+                  class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 text-sm"
+                >
+                  Voir l'offre
+                </button>
+                
+                <button
+                  (click)="removeApplication(app.id.toString())"
+                  [disabled]="loading$ | async"
+                  class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 text-sm disabled:opacity-50"
+                >
+                  ❌ Supprimer
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Empty State -->
+        <div *ngIf="applications.length === 0" class="bg-white rounded-lg shadow p-8 text-center">
+          <div class="text-gray-500 mb-4">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">Aucune candidature</h3>
+          <p class="text-gray-500 mb-4">Vous ne suivez actuellement aucune candidature.</p>
+          <a routerLink="/jobs" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+            Rechercher des offres
+          </a>
+        </div>
       </div>
     </div>
   </div>

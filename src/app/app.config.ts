@@ -8,14 +8,19 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
 import { favoritesReducer } from './core/store/favorites/favorites.reducer';
 import { FavoritesEffects } from './core/store/favorites/favorites.effects';
+import { applicationsReducer } from './core/store/applications/applications.reducer';
+import { ApplicationsEffects } from './core/store/applications/applications.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(),
-    provideStore({ favorites: favoritesReducer }),
-    provideEffects([FavoritesEffects]),
+    provideStore({ 
+      favorites: favoritesReducer,
+      applications: applicationsReducer
+    }),
+    provideEffects([FavoritesEffects, ApplicationsEffects]),
     provideStoreDevtools()
   ]
 };

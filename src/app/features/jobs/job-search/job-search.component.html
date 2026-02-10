@@ -120,6 +120,22 @@
                       <span *ngIf="isFav">❌ Retirer</span>
                     </button>
                   </ng-container>
+                  
+                  <ng-container *ngIf="isApplicationTracked$(job.id) | async as isTracked">
+                    <button
+                      *ngIf="isLoggedIn$ | async"
+                      (click)="isTracked ? removeFromApplications(job.id) : addToApplications(job)"
+                      [disabled]="applicationsLoading$() | async"
+                      class="px-4 py-2 text-white rounded text-sm disabled:opacity-50 mt-2"
+                      [ngClass]="{
+                        'bg-green-500 hover:bg-green-600': !isTracked,
+                        'bg-orange-500 hover:bg-orange-600': isTracked
+                      }"
+                    >
+                      <span *ngIf="!isTracked">📋 Suivre candidature</span>
+                      <span *ngIf="isTracked">❌ Arrêter suivi</span>
+                    </button>
+                  </ng-container>
                 </div>
               </div>
             </div>

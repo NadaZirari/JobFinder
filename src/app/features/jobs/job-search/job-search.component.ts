@@ -9,7 +9,9 @@ import { JobService, JobSearchParams, JobSearchResponse } from '../../../core/se
 import { Job } from '../../../core/models/job.model';
 import { AuthService } from '../../../core/services/auth.service';
 import * as FavoritesActions from '../../../core/store/favorites/favorites.actions';
+import * as ApplicationsActions from '../../../core/store/applications/applications.actions';
 import { selectIsFavorite, selectFavoritesLoading } from '../../../core/store/favorites/favorites.selectors';
+import { selectIsApplicationTracked, selectApplicationsLoading } from '../../../core/store/applications/applications.selectors';
 
 @Component({
   selector: 'app-job-search',
@@ -72,6 +74,7 @@ export class JobSearchComponent implements OnInit, OnDestroy {
       // Vérifier le statut de favoris pour chaque offre
       response.results.forEach(job => {
         this.store.dispatch(FavoritesActions.checkFavoriteStatus({ offerId: job.id.toString() }));
+        this.store.dispatch(ApplicationsActions.checkApplicationStatus({ offerId: job.id.toString() }));
       });
     });
   }
@@ -140,6 +143,27 @@ export class JobSearchComponent implements OnInit, OnDestroy {
 
   favoritesLoading$(): Observable<boolean> {
     return this.store.select(selectFavoritesLoading);
+  }
+
+  addToApplications(job: Job): void {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+    
+    this.store.dispatch(ApplicationsActions.addApplication({ job }));
+  }
+
+  removeFromApplications(applicationId: string): void {
+    this.store.dispatch(ApplicationsActions.removeApplication({ applicationId }));
+  }
+
+  isApplicationTracked$(offerId: string): Observable<boolean> {
+    return this.store.select(selectIsApplicationTracked(offerId));
+  }
+
+  applicationsLoading$(): Observable<boolean> {
+    return this.store.select(selectApplicationsLoading);
   }
 
   logout(): void {
