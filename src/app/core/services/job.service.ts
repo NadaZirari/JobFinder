@@ -95,8 +95,7 @@ private readonly ADZUNA_BASE_URL = 'https://api.adzuna.com/v1/api';
     // Filtrer par mots-clés et localisation
     const filteredJobs = mockJobs.filter(job => {
       const matchesKeywords = !params.keywords || 
-        job.title.toLowerCase().includes(params.keywords.toLowerCase()) ||
-        job.description.toLowerCase().includes(params.keywords.toLowerCase());
+        job.title.toLowerCase().includes(params.keywords.toLowerCase());
       
       const matchesLocation = !params.location || 
         job.location.toLowerCase().includes(params.location.toLowerCase());
