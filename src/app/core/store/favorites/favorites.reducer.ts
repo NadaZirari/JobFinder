@@ -1,17 +1,32 @@
 import { createReducer, on } from '@ngrx/store';
-import { addFavorite, removeFavorite, loadFavorites, loadFavoritesSuccess, loadFavoritesFailure } from './favorites.actions';
+import { 
+  loadFavorites, 
+  loadFavoritesSuccess, 
+  loadFavoritesFailure,
+  addFavorite, 
+  addFavoriteSuccess, 
+  addFavoriteFailure,
+  removeFavorite, 
+  removeFavoriteSuccess, 
+  removeFavoriteFailure,
+  checkFavoriteStatus,
+  checkFavoriteStatusSuccess,
+  checkFavoriteStatusFailure
+} from './favorites.actions';
 import { Favorite } from '../../models/favorite.model';
 
 export interface FavoritesState {
   favorites: Favorite[];
   loading: boolean;
   error: string | null;
+  favoriteStatuses: { [offerId: string]: boolean };
 }
 
 export const initialState: FavoritesState = {
   favorites: [],
   loading: false,
-  error: null
+  error: null,
+  favoriteStatuses: {}
 };
 
 export const favoritesReducer = createReducer(
@@ -20,19 +35,49 @@ export const favoritesReducer = createReducer(
   on(loadFavoritesSuccess, (state, { favorites }) => ({ 
     ...state, 
     loading: false, 
-    favorites 
+    favorites,
+    error: null
   })),
   on(loadFavoritesFailure, (state, { error }) => ({ 
     ...state, 
     loading: false, 
     error 
   })),
-  on(addFavorite, (state, { favorite }) => ({
+  on(addFavorite, state => ({ ...state, loading: true, error: null })),
+  on(addFavoriteSuccess, (state, { favorite }) => ({
     ...state,
-    favorites: [...state.favorites, favorite]
+    loading: false,
+    favorites: [...state.favorites, favorite],
+    favoriteStatuses: { ...state.favoriteStatuses, [favorite.offerId]: true },
+    error: null
   })),
-  on(removeFavorite, (state, { offerId }) => ({
+  on(addFavoriteFailure, (state, { error }) => ({ 
+    ...state, 
+    loading: false, 
+    error 
+  })),
+  on(removeFavorite, state => ({ ...state, loading: true, error: null })),
+  on(removeFavoriteSuccess, (state, { offerId }) => ({
     ...state,
-    favorites: state.favorites.filter(fav => fav.offerId !== offerId)
+    loading: false,
+    favorites: state.favorites.filter(fav => fav.offerId !== offerId),
+    favoriteStatuses: { ...state.favoriteStatuses, [offerId]: false },
+    error: null
+  })),
+  on(removeFavoriteFailure, (state, { error }) => ({ 
+    ...state, 
+    loading: false, 
+    error 
+  })),
+  on(checkFavoriteStatus, state => ({ ...state, loading: true })),
+  on(checkFavoriteStatusSuccess, (state, { offerId, isFavorite }) => ({
+    ...state,
+    loading: false,
+    favoriteStatuses: { ...state.favoriteStatuses, [offerId]: isFavorite }
+  })),
+  on(checkFavoriteStatusFailure, (state, { error }) => ({ 
+    ...state, 
+    loading: false, 
+    error 
   }))
 );

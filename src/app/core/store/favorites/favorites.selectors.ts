@@ -19,8 +19,18 @@ export const selectFavoritesError = createSelector(
   (state: FavoritesState) => state.error
 );
 
-export const selectFavoriteByOfferId = (offerId: string | number) => createSelector(
+export const selectFavoriteStatuses = createSelector(
+  selectFavoritesState,
+  (state: FavoritesState) => state.favoriteStatuses
+);
+
+export const selectFavoriteByOfferId = (offerId: string) => createSelector(
   selectFavorites,
   (favorites: Favorite[]) =>
     favorites.find((fav: Favorite) => fav.offerId === offerId)
+);
+
+export const selectIsFavorite = (offerId: string) => createSelector(
+  selectFavoriteStatuses,
+  (statuses: { [offerId: string]: boolean }) => statuses[offerId] || false
 );

@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, startWith, map } from 'rxjs/operators';
+import { Observable, Subject, combineLatest } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, startWith, takeUntil, map } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 import { JobService, JobSearchParams, JobSearchResponse } from '../../../core/services/job.service';
 import { Job } from '../../../core/models/job.model';
 import { AuthService } from '../../../core/services/auth.service';
+import * as FavoritesActions from '../../../core/store/favorites/favorites.actions';
+import { selectIsFavorite, selectFavoritesLoading } from '../../../core/store/favorites/favorites.selectors';
 
 @Component({
   selector: 'app-job-search',
@@ -15,7 +18,7 @@ import { AuthService } from '../../../core/services/auth.service';
   templateUrl: './job-search.component.html',
   styleUrls: ['./job-search.component.css']
 })
-export class JobSearchComponent implements OnInit {
+export class JobSearchComponent implements OnInit, OnDestroy {
   searchForm: FormGroup;
   jobs$: Observable<JobSearchResponse>;
   isLoading = false;
@@ -25,13 +28,15 @@ export class JobSearchComponent implements OnInit {
   totalPages = 0;
   
   private searchTerms = new Subject<JobSearchParams>();
+  private destroy$ = new Subject<void>();
   isLoggedIn$: Observable<boolean>;
 
   constructor(
     private fb: FormBuilder,
     private jobService: JobService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private store: Store
   ) {
     this.searchForm = this.fb.group({
       keywords: ['', Validators.required],
@@ -56,18 +61,29 @@ export class JobSearchComponent implements OnInit {
     );
 
     this.jobs$.pipe(
-      startWith({ results: [], count: 0, currentPage: 1, totalPages: 0 })
+      startWith({ results: [], count: 0, currentPage: 1, totalPages: 0 }),
+      takeUntil(this.destroy$)
     ).subscribe(response => {
       this.totalJobs = response.count;
       this.totalPages = response.totalPages;
       this.currentPage = response.currentPage;
       this.isLoading = false;
+      
+      // Vérifier le statut de favoris pour chaque offre
+      response.results.forEach(job => {
+        this.store.dispatch(FavoritesActions.checkFavoriteStatus({ offerId: job.id.toString() }));
+      });
     });
   }
 
   ngOnInit(): void {
     // Ne pas lancer de recherche automatiquement
     // Laisser l'utilisateur faire une recherche
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   onSearch(): void {
@@ -110,8 +126,20 @@ export class JobSearchComponent implements OnInit {
       this.router.navigate(['/auth/login']);
       return;
     }
-    // TODO: Implémenter l'ajout aux favoris avec NgRx
-    console.log('Ajouter aux favoris:', job);
+    
+    this.store.dispatch(FavoritesActions.addFavorite({ job }));
+  }
+
+  removeFromFavorites(offerId: string): void {
+    this.store.dispatch(FavoritesActions.removeFavorite({ offerId }));
+  }
+
+  isFavorite$(offerId: string): Observable<boolean> {
+    return this.store.select(selectIsFavorite(offerId));
+  }
+
+  favoritesLoading$(): Observable<boolean> {
+    return this.store.select(selectFavoritesLoading);
   }
 
   logout(): void {

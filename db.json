@@ -6,6 +6,13 @@
       "lastName": "Mclaughlin",
       "email": "goxer@mailinator.com",
       "password": "Pa$$w0rd!"
+    },
+    {
+      "id": "2",
+      "firstName": "Ian",
+      "lastName": "Vasquez",
+      "email": "sukurom@mailinator.com",
+      "password": "Pa$$w0rd!"
     }
   ],
   "favoritesOffers": [],

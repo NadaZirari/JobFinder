@@ -5,11 +5,16 @@
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-900">JobFinder</h1>
         <div class="flex items-center space-x-4">
+          <!-- Debug: état de connexion -->
+          <span class="text-xs text-gray-500" *ngIf="isLoggedIn$ | async as isLoggedIn">
+            Connecté: {{ isLoggedIn }}
+          </span>
+          
           <ng-container *ngIf="isLoggedIn$ | async as isLoggedIn; else loginLinks">
-            <a routerLink="/favorites" class="text-indigo-600 hover:text-indigo-800">Mes Favoris</a>
-            <a routerLink="/applications" class="text-indigo-600 hover:text-indigo-800">Mes Candidatures</a>
-            <a routerLink="/profile" class="text-indigo-600 hover:text-indigo-800">Mon Profil</a>
-            <button (click)="logout()" class="text-red-600 hover:text-red-800">Déconnexion</button>
+            <a routerLink="/favorites" class="text-indigo-600 hover:text-indigo-800 underline cursor-pointer">Mes Favoris</a>
+            <a routerLink="/applications" class="text-indigo-600 hover:text-indigo-800 underline cursor-pointer">Mes Candidatures</a>
+            <a routerLink="/profile" class="text-indigo-600 hover:text-indigo-800 underline cursor-pointer">Mon Profil</a>
+            <button (click)="logout()" class="text-red-600 hover:text-red-800 underline cursor-pointer">Déconnexion</button>
           </ng-container>
           <ng-template #loginLinks>
             <a routerLink="/auth/login" class="text-indigo-600 hover:text-indigo-800">Connexion</a>
@@ -100,13 +105,21 @@
                     Voir l'offre
                   </button>
                   
-                  <button
-                    *ngIf="isLoggedIn$ | async"
-                    (click)="addToFavorites(job)"
-                    class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 text-sm"
-                  >
-                    ⭐ Favoris
-                  </button>
+                  <ng-container *ngIf="isFavorite$(job.id) | async as isFav">
+                    <button
+                      *ngIf="isLoggedIn$ | async"
+                      (click)="isFav ? removeFromFavorites(job.id) : addToFavorites(job)"
+                      [disabled]="favoritesLoading$() | async"
+                      class="px-4 py-2 text-white rounded text-sm disabled:opacity-50"
+                      [ngClass]="{
+                        'bg-yellow-500 hover:bg-yellow-600': !isFav,
+                        'bg-red-500 hover:bg-red-600': isFav
+                      }"
+                    >
+                      <span *ngIf="!isFav">⭐ Favoris</span>
+                      <span *ngIf="isFav">❌ Retirer</span>
+                    </button>
+                  </ng-container>
                 </div>
               </div>
             </div>
