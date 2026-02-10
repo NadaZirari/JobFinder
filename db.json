@@ -1,5 +1,13 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "1",
+      "firstName": "Cyrus",
+      "lastName": "Mclaughlin",
+      "email": "goxer@mailinator.com",
+      "password": "Pa$$w0rd!"
+    }
+  ],
   "favoritesOffers": [],
   "applications": []
 }

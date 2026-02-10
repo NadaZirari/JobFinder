@@ -66,8 +66,8 @@ export class JobSearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Lancer une recherche initiale avec des valeurs par défaut
-    this.onSearch();
+    // Ne pas lancer de recherche automatiquement
+    // Laisser l'utilisateur faire une recherche
   }
 
   onSearch(): void {
