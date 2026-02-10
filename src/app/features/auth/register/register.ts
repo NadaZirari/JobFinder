@@ -6,6 +6,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css',
@@ -53,6 +54,7 @@ export class RegisterComponent {
 
     this.authService.register({ firstName, lastName, email, password }).subscribe({
       next: () => {
+        this.isLoading = false;
         this.router.navigate(['/jobs']);
       },
       error: (error) => {

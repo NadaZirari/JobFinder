@@ -59,7 +59,8 @@
               "buildTarget": "job-finder:build:production"
             },
             "development": {
-              "buildTarget": "job-finder:build:development"
+              "buildTarget": "job-finder:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

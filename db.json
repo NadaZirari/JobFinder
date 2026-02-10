@@ -13,6 +13,13 @@
       "lastName": "Vasquez",
       "email": "sukurom@mailinator.com",
       "password": "Pa$$w0rd!"
+    },
+    {
+      "id": "3",
+      "firstName": "Linus",
+      "lastName": "Dotson",
+      "email": "wopel@mailinator.com",
+      "password": "Pa$$w0rd!"
     }
   ],
   "favoritesOffers": [],

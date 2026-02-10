@@ -6,6 +6,7 @@ import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.html',
   styleUrl: './login.css',
@@ -39,6 +40,7 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: () => {
+        this.isLoading = false;
         this.router.navigate(['/jobs']);
       },
       error: (error) => {

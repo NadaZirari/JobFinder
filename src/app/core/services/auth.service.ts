@@ -48,7 +48,6 @@ export class AuthService {
         this.saveUserToStorage(userSession);
         return userSession;
       }),
-      tap(user => this.currentUserSubject.next(user)),
       catchError(error => throwError(() => error.message || 'Erreur de connexion'))
     );
   }
@@ -61,9 +60,14 @@ export class AuthService {
           throw new Error('Cet email est déjà utilisé');
         }
         
+        // Génération d'ID plus robuste
+        const maxId = users.length > 0 
+          ? Math.max(...users.map(u => parseInt(u.id.toString(), 10))) 
+          : 0;
+        
         const newUser: User = {
           ...userData,
-          id: (users.length + 1).toString()
+          id: (maxId + 1).toString()
         };
         
         return this.http.post<User>(`${this.API_URL}/users`, newUser);
@@ -79,7 +83,6 @@ export class AuthService {
         this.saveUserToStorage(userSession);
         return userSession;
       }),
-      tap(user => this.currentUserSubject.next(user)),
       catchError(error => throwError(() => error.message || 'Erreur lors de l\'inscription'))
     );
   }
