@@ -5,16 +5,16 @@
       <div class="flex justify-between items-center mb-6">
         <h1 class="text-3xl font-bold text-gray-900">JobFinder</h1>
         <div class="flex items-center space-x-4">
-          <ng-container *ngIf="isLoggedIn$ | async as isLoggedIn">
+          <ng-container *ngIf="isLoggedIn$ | async as isLoggedIn; else loginLinks">
             <a routerLink="/favorites" class="text-indigo-600 hover:text-indigo-800">Mes Favoris</a>
             <a routerLink="/applications" class="text-indigo-600 hover:text-indigo-800">Mes Candidatures</a>
             <a routerLink="/profile" class="text-indigo-600 hover:text-indigo-800">Mon Profil</a>
             <button (click)="logout()" class="text-red-600 hover:text-red-800">Déconnexion</button>
           </ng-container>
-          <ng-container *ngIf="!isLoggedIn">
+          <ng-template #loginLinks>
             <a routerLink="/auth/login" class="text-indigo-600 hover:text-indigo-800">Connexion</a>
             <a routerLink="/auth/register" class="text-indigo-600 hover:text-indigo-800">Inscription</a>
-          </ng-container>
+          </ng-template>
         </div>
       </div>
       
