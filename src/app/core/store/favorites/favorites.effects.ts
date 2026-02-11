@@ -1,17 +1,15 @@
 import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { FavoriteService } from '../../services/favorite.service';
 import * as FavoritesActions from './favorites.actions';
 import { Favorite } from '../../models/favorite.model';
 
 @Injectable()
 export class FavoritesEffects {
-  constructor(
-    private actions$: Actions,
-    private favoriteService: FavoriteService
-  ) {}
+  private actions$ = inject(Actions);
+  private favoriteService = inject(FavoriteService);
 
   loadFavorites$ = createEffect(() => {
     return this.actions$.pipe(

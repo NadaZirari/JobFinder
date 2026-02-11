@@ -10,7 +10,7 @@ export const addApplicationSuccess = createAction('[Applications] Add Applicatio
 export const addApplicationFailure = createAction('[Applications] Add Application Failure', props<{ error: string }>());
 
 export const updateApplicationStatus = createAction('[Applications] Update Application Status', props<{ applicationId: string; status: ApplicationStatus }>());
-export const updateApplicationStatusSuccess = createAction('[Applications] Update Application Status Success', props<{ application: Application }>());
+export const updateApplicationStatusSuccess = createAction('[Applications] Update Application Status Success', props<{ applicationId: string; status: ApplicationStatus }>());
 export const updateApplicationStatusFailure = createAction('[Applications] Update Application Status Failure', props<{ error: string }>());
 
 export const updateApplicationNotes = createAction('[Applications] Update Application Notes', props<{ applicationId: string; notes: string }>());

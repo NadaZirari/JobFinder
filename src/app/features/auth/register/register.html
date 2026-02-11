@@ -28,9 +28,10 @@
             >
             <div 
               *ngIf="firstName?.invalid && firstName?.touched" 
-              class="text-red-500 text-xs mt-1"
+              class="text-red-500 text-xs mt-1 font-medium"
             >
               <span *ngIf="firstName?.errors?.['required']">Le prénom est requis</span>
+              <span *ngIf="firstName?.errors?.['minlength']">Le prénom doit faire au moins 2 caractères</span>
             </div>
           </div>
           
@@ -41,15 +42,16 @@
               name="lastName"
               type="text"
               formControlName="lastName"
-              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              class="mt-1 appearance-none relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-400 text-slate-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent sm:text-sm transition-all shadow-sm"
               placeholder="Nom"
-              [ngClass]="{'border-red-500': lastName?.invalid && lastName?.touched}"
+              [ngClass]="{'border-red-500 ring-1 ring-red-500': lastName?.invalid && lastName?.touched}"
             >
             <div 
               *ngIf="lastName?.invalid && lastName?.touched" 
-              class="text-red-500 text-xs mt-1"
+              class="text-red-500 text-xs mt-1 font-medium"
             >
               <span *ngIf="lastName?.errors?.['required']">Le nom est requis</span>
+              <span *ngIf="lastName?.errors?.['minlength']">Le nom doit faire au moins 2 caractères</span>
             </div>
           </div>
         </div>
@@ -61,13 +63,13 @@
             name="email"
             type="email"
             formControlName="email"
-            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-400 text-slate-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent sm:text-sm transition-all shadow-sm"
             placeholder="Adresse email"
-            [ngClass]="{'border-red-500': email?.invalid && email?.touched}"
+            [ngClass]="{'border-red-500 ring-1 ring-red-500': email?.invalid && email?.touched}"
           >
           <div 
             *ngIf="email?.invalid && email?.touched" 
-            class="text-red-500 text-xs mt-1"
+            class="text-red-500 text-xs mt-1 font-medium"
           >
             <span *ngIf="email?.errors?.['required']">L'email est requis</span>
             <span *ngIf="email?.errors?.['email']">Veuillez entrer un email valide</span>
@@ -81,16 +83,17 @@
             name="password"
             type="password"
             formControlName="password"
-            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-400 text-slate-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent sm:text-sm transition-all shadow-sm"
             placeholder="Mot de passe"
-            [ngClass]="{'border-red-500': password?.invalid && password?.touched}"
+            [ngClass]="{'border-red-500 ring-1 ring-red-500': password?.invalid && password?.touched}"
           >
           <div 
             *ngIf="password?.invalid && password?.touched" 
-            class="text-red-500 text-xs mt-1"
+            class="text-red-500 text-xs mt-1 font-medium space-y-1"
           >
-            <span *ngIf="password?.errors?.['required']">Le mot de passe est requis</span>
-            <span *ngIf="password?.errors?.['minlength']">Le mot de passe doit contenir au moins 6 caractères</span>
+            <p *ngIf="password?.errors?.['required']">Le mot de passe est requis</p>
+            <p *ngIf="password?.errors?.['minlength']">Minimum 6 caractères</p>
+            <p *ngIf="password?.errors?.['passwordStrength']">Doit contenir au moins une majuscule, une minuscule et un chiffre</p>
           </div>
         </div>
 
@@ -101,15 +104,15 @@
             name="confirmPassword"
             type="password"
             formControlName="confirmPassword"
-            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            class="mt-1 appearance-none relative block w-full px-3 py-2 border border-slate-300 placeholder-slate-400 text-slate-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent sm:text-sm transition-all shadow-sm"
             placeholder="Confirmer le mot de passe"
-            [ngClass]="{'border-red-500': confirmPassword?.invalid && confirmPassword?.touched}"
+            [ngClass]="{'border-red-500 ring-1 ring-red-500': confirmPassword?.invalid && confirmPassword?.touched}"
           >
           <div 
             *ngIf="confirmPassword?.invalid && confirmPassword?.touched" 
-            class="text-red-500 text-xs mt-1"
+            class="text-red-500 text-xs mt-1 font-medium"
           >
-            <span *ngIf="confirmPassword?.errors?.['required']">La confirmation du mot de passe est requise</span>
+            <span *ngIf="confirmPassword?.errors?.['required']">La confirmation est requise</span>
             <span *ngIf="confirmPassword?.errors?.['passwordMismatch']">Les mots de passe ne correspondent pas</span>
           </div>
         </div>

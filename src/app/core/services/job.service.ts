@@ -71,15 +71,15 @@ export class JobService {
   }
 
   private transformAdzunaResponse(response: any, currentPage: number): JobSearchResponse {
-    const jobs: Job[] = response.results.map((job: any) => ({
-      id: job.id.toString(),
-      title: job.title,
-      company: job.company.display_name,
-      location: job.location.display_name,
-      description: job.description,
-      url: job.redirect_url,
-      salary: job.salary ? `${job.salary.min}-${job.salary.max}` : 'Non spécifié',
-      postedAt: new Date(job.created),
+    const jobs: Job[] = (response.results || []).map((job: any) => ({
+      id: job.id?.toString() || Math.random().toString(36).substr(2, 9),
+      title: job.title || 'Poste sans titre',
+      company: job.company?.display_name || 'Entreprise non spécifiée',
+      location: job.location?.display_name || 'Lieu non spécifié',
+      description: job.description || 'Pas de description disponible',
+      url: job.redirect_url || '#',
+      salary: job.salary ? `${job.salary.min || ''}-${job.salary.max || ''}` : 'Non spécifié',
+      postedAt: job.created ? new Date(job.created) : new Date(),
       apiSource: 'adzuna'
     }));
 
@@ -87,7 +87,7 @@ export class JobService {
       results: jobs,
       count: response.count || jobs.length,
       currentPage: currentPage,
-      totalPages: Math.ceil((response.count || jobs.length) / 10) 
+      totalPages: Math.ceil((response.count || 1) / 10) 
     };
   }
 }

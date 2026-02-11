@@ -2,11 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, Subject, takeUntil, map, startWith, debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
+import { Observable, Subject, takeUntil, map, startWith, debounceTime, distinctUntilChanged, switchMap, of, catchError, tap, shareReplay } from 'rxjs';
 import { JobService, JobSearchParams, JobSearchResponse } from '../../../core/services/job.service';
 import { Job } from '../../../core/models/job.model';
 import { Store } from '@ngrx/store';
 import { AuthService } from '../../../core/services/auth.service';
+import { FavoriteService } from '../../../core/services/favorite.service';
+import { ApplicationService } from '../../../core/services/application.service';
 import * as FavoritesActions from '../../../core/store/favorites/favorites.actions';
 import * as ApplicationsActions from '../../../core/store/applications/applications.actions';
 import { selectIsFavorite, selectFavoritesLoading } from '../../../core/store/favorites/favorites.selectors';
@@ -23,6 +25,7 @@ export class JobSearchComponent implements OnInit, OnDestroy {
   searchForm: FormGroup;
   jobs$: Observable<JobSearchResponse>;
   isLoading = false;
+  searchError: string | null = null;
   currentPage = 1;
   pageSize = 10;
   totalJobs = 0;
@@ -37,10 +40,12 @@ export class JobSearchComponent implements OnInit, OnDestroy {
     private jobService: JobService,
     private authService: AuthService,
     private router: Router,
+    private favoriteService: FavoriteService,
+    private applicationService: ApplicationService,
     private store: Store
   ) {
     this.searchForm = this.fb.group({
-      keywords: ['', Validators.required],
+      keywords: ['', [Validators.required, Validators.minLength(2)]],
       location: ['', Validators.required]
     });
 
@@ -57,8 +62,18 @@ export class JobSearchComponent implements OnInit, OnDestroy {
       ),
       switchMap(params => {
         this.isLoading = true;
-        return this.jobService.searchJobs(params);
-      })
+        this.searchError = null;
+        return this.jobService.searchJobs(params).pipe(
+          tap(() => this.isLoading = false),
+          catchError(err => {
+            console.error('Search failed:', err);
+            this.isLoading = false;
+            this.searchError = 'Une erreur est survenue lors de la recherche. Veuillez réessayer.';
+            return of<JobSearchResponse>({ results: [], count: 0, currentPage: 1, totalPages: 0 });
+          })
+        );
+      }),
+      shareReplay(1)
     );
 
     this.jobs$.pipe(
@@ -68,13 +83,6 @@ export class JobSearchComponent implements OnInit, OnDestroy {
       this.totalJobs = response.count;
       this.totalPages = response.totalPages;
       this.currentPage = response.currentPage;
-      this.isLoading = false;
-      
-      // Vérifier le statut de favoris pour chaque offre
-      response.results.forEach((job: Job) => {
-        this.store.dispatch(FavoritesActions.checkFavoriteStatus({ offerId: job.id.toString() }));
-        this.store.dispatch(ApplicationsActions.checkApplicationStatus({ offerId: job.id.toString() }));
-      });
     });
   }
 
@@ -124,15 +132,20 @@ export class JobSearchComponent implements OnInit, OnDestroy {
   }
 
   addToFavorites(job: Job): void {
+    console.log('addToFavorites appelé avec job:', job);
+    
     if (!this.authService.isLoggedIn()) {
+      console.log('Utilisateur non connecté, redirection vers login');
       this.router.navigate(['/auth/login']);
       return;
     }
     
+    console.log('Dispatch FavoritesActions.addFavorite');
     this.store.dispatch(FavoritesActions.addFavorite({ job }));
   }
 
   removeFromFavorites(offerId: string): void {
+    console.log('removeFromFavorites appelé avec offerId:', offerId);
     this.store.dispatch(FavoritesActions.removeFavorite({ offerId }));
   }
 
@@ -145,15 +158,20 @@ export class JobSearchComponent implements OnInit, OnDestroy {
   }
 
   addToApplications(job: Job): void {
+    console.log('addToApplications appelé avec job:', job);
+    
     if (!this.authService.isLoggedIn()) {
+      console.log('Utilisateur non connecté, redirection vers login');
       this.router.navigate(['/auth/login']);
       return;
     }
     
+    console.log('Dispatch ApplicationsActions.addApplication');
     this.store.dispatch(ApplicationsActions.addApplication({ job }));
   }
 
   removeFromApplications(applicationId: string): void {
+    console.log('removeFromApplications appelé avec applicationId:', applicationId);
     this.store.dispatch(ApplicationsActions.removeApplication({ applicationId }));
   }
 

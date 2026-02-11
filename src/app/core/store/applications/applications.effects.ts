@@ -8,10 +8,8 @@ import { Application } from '../../models/application.model';
 
 @Injectable()
 export class ApplicationsEffects {
-  constructor(
-    private actions$: Actions,
-    private applicationService: ApplicationService
-  ) {}
+  private actions$ = inject(Actions);
+  private applicationService = inject(ApplicationService);
 
   loadApplications$ = createEffect(() => {
     return this.actions$.pipe(
@@ -42,7 +40,7 @@ export class ApplicationsEffects {
       ofType(ApplicationsActions.updateApplicationStatus),
       mergeMap(({ applicationId, status }) =>
         this.applicationService.updateApplicationStatus(applicationId, status).pipe(
-          map((application: Application) => ApplicationsActions.updateApplicationStatusSuccess({ application })),
+          map((updatedApplication: Application) => ApplicationsActions.updateApplicationStatusSuccess({ applicationId, status })),
           catchError(error => of(ApplicationsActions.updateApplicationStatusFailure({ error: error.message })))
         )
       )

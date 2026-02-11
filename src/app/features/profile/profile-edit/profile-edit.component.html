@@ -33,6 +33,7 @@
               placeholder="Votre prénom"
             >
             <p *ngIf="profileForm.get('firstName')?.touched && profileForm.get('firstName')?.errors?.['required']" class="mt-2 text-xs font-medium text-red-500">Le prénom est requis</p>
+            <p *ngIf="profileForm.get('firstName')?.touched && profileForm.get('firstName')?.errors?.['minlength']" class="mt-2 text-xs font-medium text-red-500">Le prénom doit faire au moins 2 caractères</p>
           </div>
 
           <div>
@@ -45,6 +46,7 @@
               placeholder="Votre nom"
             >
             <p *ngIf="profileForm.get('lastName')?.touched && profileForm.get('lastName')?.errors?.['required']" class="mt-2 text-xs font-medium text-red-500">Le nom est requis</p>
+            <p *ngIf="profileForm.get('lastName')?.touched && profileForm.get('lastName')?.errors?.['minlength']" class="mt-2 text-xs font-medium text-red-500">Le nom doit faire au moins 2 caractères</p>
           </div>
         </div>
 

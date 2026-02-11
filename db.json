@@ -20,8 +20,103 @@
       "lastName": "Dotson",
       "email": "wopel@mailinator.com",
       "password": "Pa$$w0rd!"
+    },
+    {
+      "id": "4",
+      "firstName": "nada",
+      "lastName": "zirarii",
+      "email": "cepyhur@mailinator.com",
+      "password": "Pa$$w0rd!"
+    },
+    {
+      "id": "5",
+      "firstName": "imen",
+      "lastName": "matloubi",
+      "email": "kigytip@mailinator.com",
+      "password": "Pa$$w0rd!"
     }
   ],
-  "favoritesOffers": [],
-  "applications": []
+  "favoritesOffers": [
+    {
+      "id": "376c",
+      "userId": "4",
+      "offerId": "5560794615",
+      "title": "Développeuse / Développeur Java & Angular",
+      "company": "Capgemini",
+      "location": "Nantes, Loire-Atlantique"
+    },
+    {
+      "id": "a015",
+      "userId": "4",
+      "offerId": "5561780735",
+      "title": "Développeur Full-Stack - Java | Spring | Agular | React (confirmé)",
+      "company": "ESENS",
+      "location": "Paris, Ile-de-France"
+    },
+    {
+      "id": "3921",
+      "userId": "5",
+      "offerId": "5581894592",
+      "title": "Advertising Designer",
+      "company": "Locala",
+      "location": "Paris, Ile-de-France"
+    },
+    {
+      "id": "d137",
+      "userId": "5",
+      "offerId": "5624244684",
+      "title": "Alternance Développeur Microsoft Power Platform - Asnières-sur-Seine (F/H) (H/F)",
+      "company": "OpenClassrooms",
+      "location": "Paris, Ile-de-France"
+    },
+    {
+      "id": "e4e1",
+      "userId": "5",
+      "offerId": "5592118263",
+      "title": "Consultant ServiceNow F/H",
+      "company": "Coexya",
+      "location": "16ème Arrondissement, Paris"
+    }
+  ],
+  "applications": [
+    {
+      "id": "app_103",
+      "userId": "4",
+      "offerId": "5618852152",
+      "apiSource": "adzuna",
+      "title": "Développeur WEB sénior JAVA (H/F)",
+      "company": "KARPOS RH",
+      "location": "Lyon, Rhône",
+      "url": "https://www.adzuna.fr/land/ad/5618852152?se=eBumPDUH8RGTi9ldNmV0eQ&utm_medium=api&utm_source=2fc7ffd3&v=2CF58F2CEB31D6EEB99331638F1D3477FFC1FBEF",
+      "status": "accepte",
+      "notes": "voila",
+      "dateAdded": "2026-02-11T10:34:31.271Z"
+    },
+    {
+      "id": "e48b",
+      "userId": "4",
+      "offerId": "5618853888",
+      "apiSource": "adzuna",
+      "title": "Alternance UI/UX Designer F/H - Paris (F/H)",
+      "company": "ISCOD ALTERNANCE",
+      "location": "Paris, Ile-de-France",
+      "url": "https://www.adzuna.fr/land/ad/5618853888?se=Bto6TzwH8RGTi9ldNmV0eQ&utm_medium=api&utm_source=2fc7ffd3&v=EA8D3080AA05D0E8E39D7CA8CD065C3EF3118568",
+      "status": "refuse",
+      "notes": "",
+      "dateAdded": "2026-02-11T11:25:07.431Z"
+    },
+    {
+      "id": "7062",
+      "userId": "5",
+      "offerId": "5592118263",
+      "apiSource": "adzuna",
+      "title": "Consultant ServiceNow F/H",
+      "company": "Coexya",
+      "location": "16ème Arrondissement, Paris",
+      "url": "https://www.adzuna.fr/details/5592118263?utm_medium=api&utm_source=2fc7ffd3",
+      "status": "en_attente",
+      "notes": "",
+      "dateAdded": "2026-02-11T13:21:21.764Z"
+    }
+  ]
 }

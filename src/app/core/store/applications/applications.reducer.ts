@@ -63,11 +63,11 @@ export const applicationsReducer = createReducer(
     error 
   })),
   on(updateApplicationStatus, state => ({ ...state, loading: true, error: null })),
-  on(updateApplicationStatusSuccess, (state, { application }) => ({
+  on(updateApplicationStatusSuccess, (state, { applicationId, status }) => ({
     ...state,
     loading: false,
     applications: state.applications.map(app => 
-      app.id === application.id ? application : app
+      app.id.toString() === applicationId.toString() ? { ...app, status } : app
     ),
     error: null
   })),
@@ -81,7 +81,7 @@ export const applicationsReducer = createReducer(
     ...state,
     loading: false,
     applications: state.applications.map(app => 
-      app.id === application.id ? application : app
+      app.id.toString() === application.id.toString() ? application : app
     ),
     error: null
   })),
@@ -91,13 +91,18 @@ export const applicationsReducer = createReducer(
     error 
   })),
   on(removeApplication, state => ({ ...state, loading: true, error: null })),
-  on(removeApplicationSuccess, (state, { applicationId }) => ({
-    ...state,
-    loading: false,
-    applications: state.applications.filter(app => app.id !== applicationId),
-    applicationStatuses: { ...state.applicationStatuses, [applicationId]: false },
-    error: null
-  })),
+  on(removeApplicationSuccess, (state, { applicationId }) => {
+    const applicationToRemove = state.applications.find(app => app.id.toString() === applicationId.toString());
+    const offerId = applicationToRemove?.offerId;
+    
+    return {
+      ...state,
+      loading: false,
+      applications: state.applications.filter(app => app.id.toString() !== applicationId.toString()),
+      applicationStatuses: offerId ? { ...state.applicationStatuses, [offerId]: false } : state.applicationStatuses,
+      error: null
+    };
+  }),
   on(removeApplicationFailure, (state, { error }) => ({ 
     ...state, 
     loading: false, 

@@ -47,8 +47,7 @@ export class FavoriteService {
           throw new Error('Cette offre est déjà dans vos favoris');
         }
 
-        const favorite: Favorite = {
-          id: '', // Sera généré par JSON Server
+        const favorite: any = {
           userId: currentUser.id,
           offerId: job.id.toString(),
           title: job.title,

@@ -47,8 +47,7 @@ export class ApplicationService {
           throw new Error('Vous suivez déjà cette candidature');
         }
 
-        const application: Application = {
-          id: '', // Sera généré par JSON Server
+        const application: any = {
           userId: currentUser.id,
           offerId: job.id.toString(),
           apiSource: job.apiSource || 'unknown',
@@ -78,7 +77,7 @@ export class ApplicationService {
 
     return this.http.get<Application[]>(`${this.API_URL}/applications`).pipe(
       map(applications => applications.find(app => 
-        app.userId === currentUser.id && app.id === applicationId
+        app.userId === currentUser.id && app.id.toString() === applicationId.toString()
       )),
       switchMap(applicationToUpdate => {
         if (!applicationToUpdate) {
@@ -102,7 +101,7 @@ export class ApplicationService {
 
     return this.http.get<Application[]>(`${this.API_URL}/applications`).pipe(
       map(applications => applications.find(app => 
-        app.userId === currentUser.id && app.id === applicationId
+        app.userId === currentUser.id && app.id.toString() === applicationId.toString()
       )),
       switchMap(applicationToUpdate => {
         if (!applicationToUpdate) {
@@ -126,7 +125,7 @@ export class ApplicationService {
 
     return this.http.get<Application[]>(`${this.API_URL}/applications`).pipe(
       map(applications => applications.find(app => 
-        app.userId === currentUser.id && app.id === applicationId
+        app.userId === currentUser.id && app.id.toString() === applicationId.toString()
       )),
       switchMap(applicationToDelete => {
         if (!applicationToDelete) {
