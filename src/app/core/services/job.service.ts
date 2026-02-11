@@ -22,7 +22,7 @@ export interface JobSearchResponse {
   providedIn: 'root'
 })
 export class JobService {
-  private readonly ADZUNA_BASE_URL = '/adzuna-api/v1/api';
+  private readonly ADZUNA_BASE_URL = '/adzuna-api';
   private readonly ADZUNA_APP_ID = '2fc7ffd3'; 
   private readonly ADZUNA_APP_KEY = '0200e6071135284953a0d47fa2ad3a22'; 
   private readonly ADZUNA_COUNTRY = 'fr'; 
@@ -36,11 +36,13 @@ export class JobService {
     const queryParams = {
       app_id: this.ADZUNA_APP_ID,
       app_key: this.ADZUNA_APP_KEY,
-      what: keywords,
-      where: location || 'France',
-      results_per_page: '50', // On prend plus pour filtrage manuel si besoin, mais Adzuna est limité
-      content_type: 'application/json'
+      what: keywords || '', // Paramètre requis par Adzuna
+      where: location || '', // Paramètre requis par Adzuna
+      results_per_page: pageSize.toString()
     };
+
+    console.log('API URL:', url);
+    console.log('Query params:', queryParams);
 
     return this.http.get<any>(url, { params: queryParams }).pipe(
       map(response => {

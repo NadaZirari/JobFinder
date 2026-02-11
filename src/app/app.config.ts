@@ -17,8 +17,9 @@ export const appConfig: ApplicationConfig = {
       favorites: favoritesReducer,
       applications: applicationsReducer
     }),
-    // Temporairement désactivé pour corriger l'erreur
+    // Effects désactivés temporairement pour corriger l'erreur
     // provideEffects([FavoritesEffects, ApplicationsEffects]),
     provideStoreDevtools()
   ]
 };
+

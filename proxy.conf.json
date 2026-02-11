@@ -4,8 +4,13 @@
     "secure": true,
     "changeOrigin": true,
     "pathRewrite": {
-      "^/adzuna-api": ""
+      "^/adzuna-api": "/v1/api"
     },
-    "logLevel": "debug"
+    "logLevel": "debug",
+    "headers": {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization"
+    }
   }
 }
