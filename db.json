@@ -2,16 +2,9 @@
   "users": [
     {
       "id": "1",
-      "firstName": "Cyrus",
-      "lastName": "Mclaughlin",
+      "firstName": "adam",
+      "lastName": "Mol",
       "email": "goxer@mailinator.com",
-      "password": "Pa$$w0rd!"
-    },
-    {
-      "id": "2",
-      "firstName": "Ian",
-      "lastName": "Vasquez",
-      "email": "sukurom@mailinator.com",
       "password": "Pa$$w0rd!"
     },
     {
@@ -76,6 +69,30 @@
       "title": "Consultant ServiceNow F/H",
       "company": "Coexya",
       "location": "16ème Arrondissement, Paris"
+    },
+    {
+      "id": "f444",
+      "userId": "5",
+      "offerId": "5623435472",
+      "title": "Tech lead ServiceNow H/F",
+      "company": "THALES",
+      "location": "Carquefou, Nantes"
+    },
+    {
+      "id": "a028",
+      "userId": "1",
+      "offerId": "5607303686",
+      "title": "Ingénieur tests/Ingénieure tests",
+      "company": "NEO2 Digital",
+      "location": "Toulouse, Haute-Garonne"
+    },
+    {
+      "id": "433a",
+      "userId": "1",
+      "offerId": "5618853897",
+      "title": "Alternance UX designer H/F - Cormeilles-en-Parisis (F/H)",
+      "company": "ISCOD ALTERNANCE",
+      "location": "Cormeilles-en-Parisis, Argenteuil"
     }
   ],
   "applications": [
@@ -117,6 +134,32 @@
       "status": "en_attente",
       "notes": "",
       "dateAdded": "2026-02-11T13:21:21.764Z"
+    },
+    {
+      "id": "3784",
+      "userId": "1",
+      "offerId": "5607303686",
+      "apiSource": "adzuna",
+      "title": "Ingénieur tests/Ingénieure tests",
+      "company": "NEO2 Digital",
+      "location": "Toulouse, Haute-Garonne",
+      "url": "https://www.adzuna.fr/land/ad/5607303686?se=-rPNyloH8RGW-b-EASq4rw&utm_medium=api&utm_source=2fc7ffd3&v=A471ABC438534BEADEC25F1F5C20D5FAE01E01B7",
+      "status": "accepte",
+      "notes": "",
+      "dateAdded": "2026-02-11T15:03:36.169Z"
+    },
+    {
+      "id": "db9c",
+      "userId": "1",
+      "offerId": "5618853897",
+      "apiSource": "adzuna",
+      "title": "Alternance UX designer H/F - Cormeilles-en-Parisis (F/H)",
+      "company": "ISCOD ALTERNANCE",
+      "location": "Cormeilles-en-Parisis, Argenteuil",
+      "url": "https://www.adzuna.fr/land/ad/5618853897?se=kgPyuFsH8RGADewnScGUSA&utm_medium=api&utm_source=2fc7ffd3&v=3A6F6BF4E83E72896379CB9A03B3A8CA4EFBEB6E",
+      "status": "refuse",
+      "notes": "",
+      "dateAdded": "2026-02-11T15:10:03.014Z"
     }
   ]
 }

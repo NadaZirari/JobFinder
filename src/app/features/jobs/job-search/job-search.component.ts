@@ -11,13 +11,14 @@ import { FavoriteService } from '../../../core/services/favorite.service';
 import { ApplicationService } from '../../../core/services/application.service';
 import * as FavoritesActions from '../../../core/store/favorites/favorites.actions';
 import * as ApplicationsActions from '../../../core/store/applications/applications.actions';
+import { JobCardComponent } from '../job-card/job-card.component';
 import { selectIsFavorite, selectFavoritesLoading } from '../../../core/store/favorites/favorites.selectors';
 import { selectIsApplicationTracked, selectApplicationsLoading } from '../../../core/store/applications/applications.selectors';
 
 @Component({
   selector: 'app-job-search',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, JobCardComponent],
   templateUrl: './job-search.component.html',
   styleUrls: ['./job-search.component.css']
 })
@@ -142,6 +143,19 @@ export class JobSearchComponent implements OnInit, OnDestroy {
     
     console.log('Dispatch FavoritesActions.addFavorite');
     this.store.dispatch(FavoritesActions.addFavorite({ job }));
+  }
+
+  toggleFavorite(job: Job, isFavorite: boolean): void {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/auth/login']);
+      return;
+    }
+    
+    if (isFavorite) {
+      this.store.dispatch(FavoritesActions.removeFavorite({ offerId: job.id }));
+    } else {
+      this.store.dispatch(FavoritesActions.addFavorite({ job }));
+    }
   }
 
   removeFromFavorites(offerId: string): void {

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
+import { ApplicationsResolver } from './core/resolvers/applications.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'jobs', pathMatch: 'full' },
@@ -22,7 +23,8 @@ export const routes: Routes = [
   {
     path: 'applications',
     loadComponent: () => import('./features/applications/application-list/application-list.component').then(m => m.ApplicationListComponent),
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    resolve: { applications: ApplicationsResolver }
   },
   { 
     path: 'profile', 

@@ -14,6 +14,11 @@ export const selectApplicationsLoading = createSelector(
   (state: ApplicationsState) => state.loading
 );
 
+export const selectApplicationsLoaded = createSelector(
+  selectApplicationsState,
+  (state: ApplicationsState) => state.loaded
+);
+
 export const selectApplicationsError = createSelector(
   selectApplicationsState,
   (state: ApplicationsState) => state.error

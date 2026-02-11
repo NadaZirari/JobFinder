@@ -24,6 +24,7 @@ import { Application } from '../../models/application.model';
 export interface ApplicationsState {
   applications: Application[];
   loading: boolean;
+  loaded: boolean;
   error: string | null;
   applicationStatuses: { [offerId: string]: boolean };
 }
@@ -31,6 +32,7 @@ export interface ApplicationsState {
 export const initialState: ApplicationsState = {
   applications: [],
   loading: false,
+  loaded: false,
   error: null,
   applicationStatuses: {}
 };
@@ -41,6 +43,7 @@ export const applicationsReducer = createReducer(
   on(loadApplicationsSuccess, (state, { applications }) => ({ 
     ...state, 
     loading: false, 
+    loaded: true,
     applications,
     error: null
   })),
