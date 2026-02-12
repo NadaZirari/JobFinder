@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Observable, Subject, takeUntil, map, startWith, debounceTime, distinctUntilChanged, switchMap, of, catchError, tap, shareReplay } from 'rxjs';
+import { Observable, Subject, takeUntil, map, startWith, debounceTime, distinctUntilChanged, switchMap, of, catchError, tap, shareReplay, take } from 'rxjs';
 import { JobService, JobSearchParams, JobSearchResponse } from '../../../core/services/job.service';
 import { Job } from '../../../core/models/job.model';
 import { Store } from '@ngrx/store';
@@ -145,17 +145,19 @@ export class JobSearchComponent implements OnInit, OnDestroy {
     this.store.dispatch(FavoritesActions.addFavorite({ job }));
   }
 
-  toggleFavorite(job: Job, isFavorite: boolean): void {
+  toggleFavorite(job: Job): void {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/auth/login']);
       return;
     }
     
-    if (isFavorite) {
-      this.store.dispatch(FavoritesActions.removeFavorite({ offerId: job.id }));
-    } else {
-      this.store.dispatch(FavoritesActions.addFavorite({ job }));
-    }
+    this.isFavorite$(job.id).pipe(take(1)).subscribe(isFavorite => {
+      if (isFavorite) {
+        this.store.dispatch(FavoritesActions.removeFavorite({ offerId: job.id }));
+      } else {
+        this.store.dispatch(FavoritesActions.addFavorite({ job }));
+      }
+    });
   }
 
   removeFromFavorites(offerId: string): void {

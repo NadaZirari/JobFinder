@@ -9,7 +9,7 @@
     },
     {
       "id": "3",
-      "firstName": "Linus",
+      "firstName": "ang",
       "lastName": "Dotson",
       "email": "wopel@mailinator.com",
       "password": "Pa$$w0rd!"
@@ -101,6 +101,22 @@
       "title": "Consultante - Consultant ServiceNow_Nantes F/H",
       "company": "Capgemini",
       "location": "Nantes, Loire-Atlantique"
+    },
+    {
+      "id": "eb69",
+      "userId": "3",
+      "offerId": "5623893404",
+      "title": "Administrateur ServiceNow",
+      "company": "AIS",
+      "location": "Haute-Garonne, Occitanie"
+    },
+    {
+      "id": "d0a4",
+      "userId": "3",
+      "offerId": "5623435472",
+      "title": "Tech lead ServiceNow H/F",
+      "company": "THALES",
+      "location": "Carquefou, Nantes"
     }
   ],
   "applications": [
@@ -168,6 +184,19 @@
       "status": "accepte",
       "notes": "C'est confirmé !!",
       "dateAdded": "2026-02-11T16:16:18.603Z"
+    },
+    {
+      "id": "49c6",
+      "userId": "3",
+      "offerId": "5623435472",
+      "apiSource": "adzuna",
+      "title": "Tech lead ServiceNow H/F",
+      "company": "THALES",
+      "location": "Carquefou, Nantes",
+      "url": "https://www.adzuna.fr/land/ad/5623435472?se=Esqe0P8H8RGsHcSmgioj2w&utm_medium=api&utm_source=2fc7ffd3&v=C016881FA4494AC2E26BBA956A0DAEFA7BEF132F",
+      "status": "accepte",
+      "notes": "",
+      "dateAdded": "2026-02-12T10:44:46.306Z"
     }
   ]
 }

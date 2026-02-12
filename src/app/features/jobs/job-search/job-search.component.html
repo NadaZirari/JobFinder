@@ -95,7 +95,7 @@
               [isLoggedIn]="(isLoggedIn$ | async) || false"
               [isFavorite]="(isFavorite$(job.id) | async) || false"
               [isTracked]="(isApplicationTracked$(job.id) | async) || false"
-              (toggleFavorite)="toggleFavorite(job, (isFavorite$(job.id) | async) || false)"
+              (toggleFavorite)="toggleFavorite(job)"
               (track)="addToApplications(job)"
               (view)="viewJob(job)"
             ></app-job-card>

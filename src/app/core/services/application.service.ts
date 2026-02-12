@@ -39,7 +39,7 @@ export class ApplicationService {
 
     // Vérifier si la candidature existe déjà
     return this.http.get<Application[]>(`${this.API_URL}/applications`).pipe(
-      map(applications => applications.filter(app => 
+      map(applications => applications.filter(app =>
         app.userId === currentUser.id && app.offerId === job.id.toString()
       )),
       switchMap(existingApplications => {
@@ -76,14 +76,14 @@ export class ApplicationService {
     }
 
     return this.http.get<Application[]>(`${this.API_URL}/applications`).pipe(
-      map(applications => applications.find(app => 
+      map(applications => applications.find(app =>
         app.userId === currentUser.id && app.id.toString() === applicationId.toString()
       )),
       switchMap(applicationToUpdate => {
         if (!applicationToUpdate) {
           throw new Error('Candidature non trouvée');
         }
-        
+
         return this.http.patch<Application>(`${this.API_URL}/applications/${applicationId}`, { status });
       }),
       catchError(error => {
@@ -100,14 +100,14 @@ export class ApplicationService {
     }
 
     return this.http.get<Application[]>(`${this.API_URL}/applications`).pipe(
-      map(applications => applications.find(app => 
+      map(applications => applications.find(app =>
         app.userId === currentUser.id && app.id.toString() === applicationId.toString()
       )),
       switchMap(applicationToUpdate => {
         if (!applicationToUpdate) {
           throw new Error('Candidature non trouvée');
         }
-        
+
         return this.http.patch<Application>(`${this.API_URL}/applications/${applicationId}`, { notes });
       }),
       catchError(error => {
@@ -124,7 +124,7 @@ export class ApplicationService {
     }
 
     return this.http.get<Application[]>(`${this.API_URL}/applications`).pipe(
-      map(applications => applications.find(app => 
+      map(applications => applications.find(app =>
         app.userId === currentUser.id && app.id.toString() === applicationId.toString()
       )),
       switchMap(applicationToDelete => {
@@ -147,7 +147,7 @@ export class ApplicationService {
     }
 
     return this.http.get<Application[]>(`${this.API_URL}/applications`).pipe(
-      map(applications => applications.some(app => 
+      map(applications => applications.some(app =>
         app.userId === currentUser.id && app.offerId === offerId
       )),
       catchError(error => {
