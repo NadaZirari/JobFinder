@@ -25,7 +25,7 @@
       "id": "5",
       "firstName": "imen",
       "lastName": "matloubi",
-      "email": "kigytip@mailinator.com",
+      "email": "iman@matloubi.com",
       "password": "Pa$$w0rd!"
     }
   ],
@@ -45,38 +45,6 @@
       "title": "Développeur Full-Stack - Java | Spring | Agular | React (confirmé)",
       "company": "ESENS",
       "location": "Paris, Ile-de-France"
-    },
-    {
-      "id": "3921",
-      "userId": "5",
-      "offerId": "5581894592",
-      "title": "Advertising Designer",
-      "company": "Locala",
-      "location": "Paris, Ile-de-France"
-    },
-    {
-      "id": "d137",
-      "userId": "5",
-      "offerId": "5624244684",
-      "title": "Alternance Développeur Microsoft Power Platform - Asnières-sur-Seine (F/H) (H/F)",
-      "company": "OpenClassrooms",
-      "location": "Paris, Ile-de-France"
-    },
-    {
-      "id": "e4e1",
-      "userId": "5",
-      "offerId": "5592118263",
-      "title": "Consultant ServiceNow F/H",
-      "company": "Coexya",
-      "location": "16ème Arrondissement, Paris"
-    },
-    {
-      "id": "f444",
-      "userId": "5",
-      "offerId": "5623435472",
-      "title": "Tech lead ServiceNow H/F",
-      "company": "THALES",
-      "location": "Carquefou, Nantes"
     },
     {
       "id": "a028",
@@ -117,6 +85,15 @@
       "title": "Tech lead ServiceNow H/F",
       "company": "THALES",
       "location": "Carquefou, Nantes"
+    },
+    {
+      "id": "0a55",
+      "userId": "5",
+      "offerId": "5618853874",
+      "title": "Alternance UX/UI Designer - Paron (F/H)",
+      "company": "ISCOD ALTERNANCE",
+      "location": "France",
+      "url": "https://www.adzuna.fr/land/ad/5618853874?se=ZuG25AMI8RGodNrq8MLh2w&utm_medium=api&utm_source=2fc7ffd3&v=2DD453C5D824D31BB8485DB3D6D31AA964AC4391"
     }
   ],
   "applications": [
@@ -155,7 +132,7 @@
       "company": "Coexya",
       "location": "16ème Arrondissement, Paris",
       "url": "https://www.adzuna.fr/details/5592118263?utm_medium=api&utm_source=2fc7ffd3",
-      "status": "en_attente",
+      "status": "accepte",
       "notes": "",
       "dateAdded": "2026-02-11T13:21:21.764Z"
     },
@@ -197,6 +174,32 @@
       "status": "accepte",
       "notes": "",
       "dateAdded": "2026-02-12T10:44:46.306Z"
+    },
+    {
+      "id": "df04",
+      "userId": "5",
+      "offerId": "5618854496",
+      "apiSource": "adzuna",
+      "title": "Lead Designer UX/UI F/H",
+      "company": "Auchan Retail France",
+      "location": "Villeneuve-d'Ascq, Lille",
+      "url": "https://www.adzuna.fr/land/ad/5618854496?se=DJ_l4AEI8RGtk_OciL0lvA&utm_medium=api&utm_source=2fc7ffd3&v=294403780250EA80946B0C223594DE1E00E2C317",
+      "status": "accepte",
+      "notes": "voilaaaaaaaaaaaaaa",
+      "dateAdded": "2026-02-12T10:59:25.542Z"
+    },
+    {
+      "id": "a89c",
+      "userId": "5",
+      "offerId": "5618853874",
+      "apiSource": "adzuna",
+      "title": "Alternance UX/UI Designer - Paron (F/H)",
+      "company": "ISCOD ALTERNANCE",
+      "location": "France",
+      "url": "https://www.adzuna.fr/land/ad/5618853874?se=ZuG25AMI8RGodNrq8MLh2w&utm_medium=api&utm_source=2fc7ffd3&v=2DD453C5D824D31BB8485DB3D6D31AA964AC4391",
+      "status": "refuse",
+      "notes": "",
+      "dateAdded": "2026-02-12T11:13:51.019Z"
     }
   ]
 }

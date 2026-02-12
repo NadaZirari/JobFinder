@@ -52,7 +52,8 @@ export class FavoriteService {
           offerId: job.id.toString(),
           title: job.title,
           company: job.company,
-          location: job.location
+          location: job.location,
+          url: job.url
         };
 
         return this.http.post<Favorite>(`${this.API_URL}/favoritesOffers`, favorite);

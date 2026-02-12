@@ -32,9 +32,11 @@ export class FavoritesListComponent implements OnInit {
     this.store.dispatch(FavoritesActions.removeFavorite({ offerId }));
   }
 
-  viewJob(offerId: string): void {
-    // Pour l'instant, nous n'avons pas l'URL complète dans les favoris
-    // TODO: Stocker l'URL complète dans les favoris ou la récupérer
-    console.log('Voir l\'offre:', offerId);
+
+
+ viewJob(url: string): void {
+    if (url && url !== '#') {
+      window.open(url, '_blank');
+    }
   }
 }
